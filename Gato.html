@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Gato - Estudio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #tablero {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        #tablero td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+        #tablero td:hover {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego del Gato - Estudio</h1>
+    <table id="tablero">
+        <tr>
+            <td onclick="elegirCasilla(0)"></td>
+            <td onclick="elegirCasilla(1)"></td>
+            <td onclick="elegirCasilla(2)"></td>
+        </tr>
+        <tr>
+            <td onclick="elegirCasilla(3)"></td>
+            <td onclick="elegirCasilla(4)"></td>
+            <td onclick="elegirCasilla(5)"></td>
+        </tr>
+        <tr>
+            <td onclick="elegirCasilla(6)"></td>
+            <td onclick="elegirCasilla(7)"></td>
+            <td onclick="elegirCasilla(8)"></td>
+        </tr>
+    </table>
+    <div id="pregunta"></div>
+    <div id="respuesta">
+        <input type="text" id="respuestaInput" placeholder="Ingresa tu respuesta">
+        <button onclick="verificarRespuesta()">Verificar</button>
+    </div>
+    <div id="mensaje"></div>
+
+    <script>
+        let tablero = ['', '', '', '', '', '', '', '', ''];
+        let jugadorActual = 'X';
+        let juegoTerminado = false;
+        let preguntas = [
+            "¿Cuál es la capital de Francia?",
+            "¿Quién escribió 'Don Quijote de la Mancha'?",
+            "¿Cuál es el símbolo químico del oro?",
+            "¿Cuál es el planeta más grande del sistema solar?",
+            "¿Cuál es el río más largo del mundo?",
+            "¿Cuál es la fórmula química del agua?",
+            "¿En qué año comenzó la Segunda Guerra Mundial?",
+            "¿Cuál es la obra más famosa de William Shakespeare?",
+            "¿Quién pintó la Mona Lisa?"
+        ];
+        let respuestas = [
+            "paris",
+            "miguel de cervantes",
+            "au",
+            "jupiter",
+            "nilo",
+            "h2o",
+            "1939",
+            "romeo y julieta",
+            "leonardo da vinci"
+        ];
+
+        function mostrarPregunta(casilla) {
+            document.getElementById('pregunta').textContent = preguntas[casilla];
+        }
+
+        function elegirCasilla(casilla) {
+            if (!juegoTerminado && tablero[casilla] === '') {
+                mostrarPregunta(casilla);
+                document.getElementById('respuestaInput').value = '';
+            }
+        }
+
+        function verificarRespuesta() {
+            let respuestaUsuario = document.getElementById('respuestaInput').value.toLowerCase();
+            let casilla = tablero.indexOf('');
+            if (respuestaUsuario === respuestas[casilla]) {
+                tablero[casilla] = jugadorActual;
+                document.getElementById('tablero').rows[Math.floor(casilla / 3)].cells[casilla % 3].textContent = jugadorActual;
+                if (hayGanador(jugadorActual)) {
+                    document.getElementById('mensaje').textContent = `¡El jugador ${jugadorActual} ha ganado!`;
+                    juegoTerminado = true;
+                } else if (!tablero.includes('')) {
+                    document.getElementById('mensaje').textContent = '¡Empate!';
+                    juegoTerminado = true;
+                }
+                jugadorActual = jugadorActual === 'X' ? 'O' : 'X';
+            } else {
+                alert('Respuesta incorrecta. Inténtalo de nuevo.');
+            }
+        }
+
+        function hayGanador(jugador) {
+            return (
+                (tablero[0] === jugador && tablero[1] === jugador && tablero[2] === jugador) ||
+                (tablero[3] === jugador && tablero[4] === jugador && tablero[5] === jugador) ||
+                (tablero[6] === jugador && tablero[7] === jugador && tablero[8] === jugador) ||
+                (tablero[0] === jugador && tablero[3] === jugador && tablero[6] === jugador) ||
+                (tablero[1] === jugador && tablero[4] === jugador && tablero[7] === jugador) ||
+                (tablero[2] === jugador && tablero[5] === jugador && tablero[8] === jugador) ||
+                (tablero[0] === jugador && tablero[4] === jugador && tablero[8] === jugador) ||
+                (tablero[2] === jugador && tablero[4] === jugador && tablero[6] === jugador)
+            );
+        }
+    </script>
+</body>
+</html>
